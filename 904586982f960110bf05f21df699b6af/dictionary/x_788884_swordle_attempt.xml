@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Attempt" max_length="40" name="x_788884_swordle_attempt" type="collection">
+        <element label="Pass" max_length="40" name="pass" type="boolean"/>
+        <element default="0" label="Try" max_length="40" name="try" type="integer"/>
+        <element label="User" max_length="32" name="user" reference="sys_user" type="reference"/>
+        <element label="Word" max_length="32" name="word" reference="x_788884_swordle_word" type="reference"/>
+        <index name="index">
+            <element name="user"/>
+        </index>
+        <index name="index2">
+            <element name="word"/>
+        </index>
+    </element>
+</database>

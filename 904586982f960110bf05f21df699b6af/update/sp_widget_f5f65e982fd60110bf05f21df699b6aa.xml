@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
+    <sp_widget action="INSERT_OR_UPDATE">
+        <category>custom</category>
+        <client_script><![CDATA[api.controller=function($scope) {
+	/* widget controller */
+	var c = this;
+
+	$scope.getNextWord = function() {
+		// console.log('click');
+		c.data.currentWord = c.data.wordList.shift();
+	}
+
+	$scope.checkWord = function() {
+
+		var wordLen = c.data.currentWord.text.length;
+		var guessedWord = "";
+		var attemptObj = {};
+		var color = [];
+
+		for (var i = 0; i < wordLen; i++) {
+
+			// States: Green - Right letter, right position
+			//         Yellow - Right letter, wrong position
+			//         Gray - What the F*** were you smoking?!
+
+			var letter = c.data.currentWord.text[i];
+			// Is this a letter?
+			if (c.data.currentWord.meta[i].isLetter) {
+
+				// Pass 1: Is this letter correct and in the right position?
+
+				var letterN = document.getElementById('letter_' + i).value.toString().toUpperCase();
+				guessedWord += letterN;
+				// console.log('>>>DEBUG: letterN=' + letterN);
+				if (letterN == letter) {
+					console.log('>>>DEBUG: Right letter, right pos ' + letterN);
+					color.push('green');
+				} else if (c.data.currentWord.text.indexOf(letterN) >= 0) {
+					// Pass 2: Is this letter correct and in the wrong position?
+					console.log('>>>DEBUG: Right letter, wrong position ' + letterN);
+					color.push('yellow');
+				} else {
+					// WTF
+					console.log('>>>DEBUG: WTF');
+					color.push('#ccc');
+				}
+			} else {
+				guessedWord += c.data.currentWord.text[i];
+				color.push('green'); // Dharmit said so
+			}
+
+		}
+
+		// Populate c.data.currentWord.attempt[i]
+
+		attemptObj.guessedWord = guessedWord;
+		attemptObj.color = color;
+		c.data.currentWord.attempts[c.data.attemptCount++] = attemptObj;
+	}
+
+};]]></client_script>
+        <controller_as>c</controller_as>
+        <css/>
+        <data_table>sp_instance</data_table>
+        <demo_data/>
+        <description/>
+        <docs/>
+        <field_list/>
+        <has_preview>true</has_preview>
+        <id>swordle</id>
+        <internal>false</internal>
+        <link><![CDATA[function link(scope, element, attrs, controller) {  }]]></link>
+        <name>swordle</name>
+        <option_schema/>
+        <public>false</public>
+        <roles/>
+        <script><![CDATA[(function() {
+	/* populate the 'data' object */
+	/* e.g., data.table = $sp.getValue('table'); */
+
+	// Fix this later
+	var sessionID = 'e466da982fd60110bf05f21df699b679';
+	var wordList = getWordList(sessionID);
+
+	function getWordList(sessionID) {
+
+		var m2mGr = new GlideRecord('x_788884_swordle_m2m_session_word');
+		var list = [];
+
+		m2mGr.addQuery('session', sessionID);
+		m2mGr.query();
+
+		//console.log(m2mGr.getRowCount() + ' records found');
+
+		while (m2mGr.next()) {
+
+			var text = m2mGr.word.text.toUpperCase();
+			var meta = [];
+
+			for (var i = 0; i < text.length; i++) {
+				var metaObj = {
+					'isLetter' : (text[i] >= 'A' && text[i] <= 'Z')
+				};
+				meta.push(metaObj);
+			}
+			var obj = {
+				'text' : text,
+				'hint' : m2mGr.word.hint.toString(),
+				'attempts' : [],
+				'meta' : meta
+			};
+			
+			var maxGuesses = Constants.MAX_ATTEMPTS;
+			for (var mg = 0; mg < maxGuesses; mg++) {
+				obj.attempts[mg] = {
+					"guessedWord" : "",
+					"color" : []
+				};
+				for (var wl = 0; wl < obj.text.length; wl++) {
+					obj.attempts[mg].color.push('#fff');
+				}
+			}
+
+			list.push(obj);
+		}
+
+		return list;
+	}
+
+	data.wordList = wordList;
+	data.currentWord = {};
+	data.attemptCount = 0;
+})();]]></script>
+        <servicenow>false</servicenow>
+        <sys_class_name>sp_widget</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-03-13 21:42:23</sys_created_on>
+        <sys_id>f5f65e982fd60110bf05f21df699b6aa</sys_id>
+        <sys_mod_count>42</sys_mod_count>
+        <sys_name>swordle</sys_name>
+        <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
+        <sys_update_name>sp_widget_f5f65e982fd60110bf05f21df699b6aa</sys_update_name>
+        <sys_updated_by>admin</sys_updated_by>
+        <sys_updated_on>2022-03-14 00:30:55</sys_updated_on>
+        <template><![CDATA[<div>
+  <!-- your widget template -->
+ <!-- <pre>{{c.data.wordList | json }}</pre> -->
+  <pre>{{c.data.currentWord | json }}</pre>
+  <div>
+    {{c.data.currentWord.text}}
+  </div>
+  
+  <div>
+    <span ng-repeat="item in c.data.currentWord.meta">
+      <span ng-if="item.isLetter">
+      <input type="text" id="{{'letter_' + $index}}" size="1" maxlength="1"></span>
+			<span ng-if="!item.isLetter">&nbsp;{{c.data.currentWord.text[$index]}}&nbsp;</span>
+      &nbsp;
+    </span>
+  </div>
+  
+  <div class="btn btn-info" ng-click="checkWord()">
+    ${Submit}
+  </div>
+
+  <div class="btn btn-primary" ng-if="c.data.wordList.length > 0" ng-click="getNextWord()">
+    Next word!
+  </div>
+
+</div>]]></template>
+    </sp_widget>
+</record_update>

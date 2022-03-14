@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?><database>
+    <element label="Session word" max_length="40" name="x_788884_swordle_m2m_session_word" type="collection">
+        <element attributes="encode_utf8=false" label="Session" max_length="32" name="session" reference="x_788884_swordle_session" type="reference"/>
+        <element attributes="encode_utf8=false" label="Word" max_length="32" name="word" reference="x_788884_swordle_word" type="reference"/>
+        <index name="index">
+            <element name="session"/>
+        </index>
+        <index name="index2">
+            <element name="word"/>
+        </index>
+    </element>
+</database>
