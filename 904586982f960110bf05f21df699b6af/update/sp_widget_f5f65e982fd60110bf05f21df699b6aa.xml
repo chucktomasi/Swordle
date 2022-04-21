@@ -9,6 +9,14 @@
 		// console.log('click');
 		c.data.currentWord = c.data.wordList.shift();
 	}
+	
+	// TODO: Get the first word by default
+	// TODO: Advance the cursor after each letter
+	// TODO: Disable the submit button until all letters are entered
+	// TODO: Only allow letters (no numbers, symbols, emojis)
+	// TODO: Disable all rows except attemptCount
+	// TODO: Duplicate letters that don't belong, gray
+	//       CONTACT (correct word=CONTENT), second C should be gray
 
 	$scope.checkWord = function() {
 
@@ -16,6 +24,7 @@
 		var guessedWord = "";
 		var attemptObj = {};
 		var color = [];
+		var letterList = [];
 
 		for (var i = 0; i < wordLen; i++) {
 
@@ -23,27 +32,31 @@
 			//         Yellow - Right letter, wrong position
 			//         Gray - What the F*** were you smoking?!
 
+			var myColor = '#ccc';
 			var letter = c.data.currentWord.text[i];
 			// Is this a letter?
 			if (c.data.currentWord.meta[i].isLetter) {
 
 				// Pass 1: Is this letter correct and in the right position?
-
-				var letterN = document.getElementById('letter_' + i).value.toString().toUpperCase();
+				var index = 'letter_' + c.data.attemptCount + '_' + i;
+				var letterN = document.getElementById(index).value.toString().toUpperCase();
 				guessedWord += letterN;
 				// console.log('>>>DEBUG: letterN=' + letterN);
 				if (letterN == letter) {
-					console.log('>>>DEBUG: Right letter, right pos ' + letterN);
-					color.push('green');
+					// console.log('>>>DEBUG: Right letter, right pos ' + letterN);
+					myColor = 'green';
 				} else if (c.data.currentWord.text.indexOf(letterN) >= 0) {
 					// Pass 2: Is this letter correct and in the wrong position?
-					console.log('>>>DEBUG: Right letter, wrong position ' + letterN);
-					color.push('yellow');
+					// console.log('>>>DEBUG: Right letter, wrong position ' + letterN);
+					myColor = 'yellow';
 				} else {
 					// WTF
-					console.log('>>>DEBUG: WTF');
-					color.push('#ccc');
+					// console.log('>>>DEBUG: WTF');
 				}
+				letterList[i] = letterN;
+				color.push(myColor);
+				// document.getElementById(index).style.foo = 'green';
+				console.log('>>>DEBUG: index=' + index + ' myColor=' + myColor + ' letterN=' + letterN)
 			} else {
 				guessedWord += c.data.currentWord.text[i];
 				color.push('green'); // Dharmit said so
@@ -55,6 +68,7 @@
 
 		attemptObj.guessedWord = guessedWord;
 		attemptObj.color = color;
+		attemptObj.letter = letterList;
 		c.data.currentWord.attempts[c.data.attemptCount++] = attemptObj;
 	}
 
@@ -79,53 +93,8 @@
 	/* e.g., data.table = $sp.getValue('table'); */
 
 	// Fix this later
-	var sessionID = 'e466da982fd60110bf05f21df699b679';
-	var wordList = getWordList(sessionID);
-
-	function getWordList(sessionID) {
-
-		var m2mGr = new GlideRecord('x_788884_swordle_m2m_session_word');
-		var list = [];
-
-		m2mGr.addQuery('session', sessionID);
-		m2mGr.query();
-
-		//console.log(m2mGr.getRowCount() + ' records found');
-
-		while (m2mGr.next()) {
-
-			var text = m2mGr.word.text.toUpperCase();
-			var meta = [];
-
-			for (var i = 0; i < text.length; i++) {
-				var metaObj = {
-					'isLetter' : (text[i] >= 'A' && text[i] <= 'Z')
-				};
-				meta.push(metaObj);
-			}
-			var obj = {
-				'text' : text,
-				'hint' : m2mGr.word.hint.toString(),
-				'attempts' : [],
-				'meta' : meta
-			};
-			
-			var maxGuesses = Constants.MAX_ATTEMPTS;
-			for (var mg = 0; mg < maxGuesses; mg++) {
-				obj.attempts[mg] = {
-					"guessedWord" : "",
-					"color" : []
-				};
-				for (var wl = 0; wl < obj.text.length; wl++) {
-					obj.attempts[mg].color.push('#fff');
-				}
-			}
-
-			list.push(obj);
-		}
-
-		return list;
-	}
+	var sessionID = $sp.getParameter('session');
+	var wordList = new Util().getWordList(sessionID);
 
 	data.wordList = wordList;
 	data.currentWord = {};
@@ -135,32 +104,39 @@
         <sys_class_name>sp_widget</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2022-03-13 21:42:23</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
         <sys_id>f5f65e982fd60110bf05f21df699b6aa</sys_id>
-        <sys_mod_count>42</sys_mod_count>
+        <sys_mod_count>80</sys_mod_count>
         <sys_name>swordle</sys_name>
         <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
         <sys_policy/>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
         <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
         <sys_update_name>sp_widget_f5f65e982fd60110bf05f21df699b6aa</sys_update_name>
-        <sys_updated_by>admin</sys_updated_by>
-        <sys_updated_on>2022-03-14 00:30:55</sys_updated_on>
+        <sys_updated_by>chuck.tomasi</sys_updated_by>
+        <sys_updated_on>2022-04-21 02:02:41</sys_updated_on>
         <template><![CDATA[<div>
   <!-- your widget template -->
- <!-- <pre>{{c.data.wordList | json }}</pre> -->
-  <pre>{{c.data.currentWord | json }}</pre>
+  <!-- <pre>{{c.data.wordList | json }}</pre> -->
   <div>
     {{c.data.currentWord.text}}
   </div>
-  
-  <div>
+
+  <div ng-repeat="att in c.data.currentWord.attempts">
     <span ng-repeat="item in c.data.currentWord.meta">
       <span ng-if="item.isLetter">
-      <input type="text" id="{{'letter_' + $index}}" size="1" maxlength="1"></span>
-			<span ng-if="!item.isLetter">&nbsp;{{c.data.currentWord.text[$index]}}&nbsp;</span>
+        <input type="text"
+               id="{{'letter_' + $parent.$parent.$index + '_' + $index}}"
+               size="1"
+               maxlength="1"
+               value="{{att.letter[$index]}}"
+               style="background-color:{{att.color[$index]}}; color:black">
+      </span>
+      <span ng-if="!item.isLetter">&nbsp;{{c.data.currentWord.text[$index]}}&nbsp;</span>
       &nbsp;
     </span>
   </div>
-  
+
   <div class="btn btn-info" ng-click="checkWord()">
     ${Submit}
   </div>
@@ -168,6 +144,8 @@
   <div class="btn btn-primary" ng-if="c.data.wordList.length > 0" ng-click="getNextWord()">
     Next word!
   </div>
+
+  <pre>{{c.data.currentWord | json }}</pre>
 
 </div>]]></template>
     </sp_widget>

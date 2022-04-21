@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="sys_script_include">
+    <sys_script_include action="INSERT_OR_UPDATE">
+        <access>package_private</access>
+        <active>true</active>
+        <api_name>x_788884_swordle.Util</api_name>
+        <caller_access/>
+        <client_callable>false</client_callable>
+        <description/>
+        <name>Util</name>
+        <script><![CDATA[var Util = Class.create();
+Util.prototype = {
+	initialize: function() {
+	},
+
+	getWordList : function(sessionID) {
+
+		var m2mGr = new GlideRecord('x_788884_swordle_m2m_session_word');
+		var list = [];
+
+		m2mGr.addQuery('session', sessionID);
+		m2mGr.query();
+
+		//console.log(m2mGr.getRowCount() + ' records found');
+
+		while (m2mGr.next()) {
+
+			var text = m2mGr.word.text.toUpperCase();
+			var meta = [];
+
+			for (var i = 0; i < text.length; i++) {
+				var metaObj = {
+					'isLetter' : (text[i] >= 'A' && text[i] <= 'Z')
+				};
+				meta.push(metaObj);
+			}
+			var obj = {
+				'text' : text,
+				'hint' : m2mGr.word.hint.toString(),
+				'attempts' : [],
+				'meta' : meta
+			};
+
+			var maxGuesses = Constants.MAX_ATTEMPTS;
+			for (var mg = 0; mg < maxGuesses; mg++) {
+				obj.attempts[mg] = {
+					"guessedWord" : "",
+					"color" : [],
+					"letter" : []
+				};
+				for (var wl = 0; wl < obj.text.length; wl++) {
+					obj.attempts[mg].color.push('#fff');
+					obj.attempts[mg].letter[wl] = '';
+				}
+			}
+
+			list.push(obj);
+		}
+
+		return list;
+	},
+
+	type: 'Util'
+};]]></script>
+        <sys_class_name>sys_script_include</sys_class_name>
+        <sys_created_by>chuck.tomasi</sys_created_by>
+        <sys_created_on>2022-04-21 00:49:10</sys_created_on>
+        <sys_customer_update>false</sys_customer_update>
+        <sys_id>cc0eaaa01b43c1502e4d4156bc4bcbf0</sys_id>
+        <sys_mod_count>2</sys_mod_count>
+        <sys_name>Util</sys_name>
+        <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
+        <sys_policy>read</sys_policy>
+        <sys_replace_on_upgrade>false</sys_replace_on_upgrade>
+        <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
+        <sys_update_name>sys_script_include_cc0eaaa01b43c1502e4d4156bc4bcbf0</sys_update_name>
+        <sys_updated_by>chuck.tomasi</sys_updated_by>
+        <sys_updated_on>2022-04-21 01:16:10</sys_updated_on>
+    </sys_script_include>
+</record_update>
