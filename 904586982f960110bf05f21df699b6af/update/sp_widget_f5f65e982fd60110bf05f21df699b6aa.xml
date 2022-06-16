@@ -9,14 +9,14 @@
 		// console.log('click');
 		c.data.currentWord = c.data.wordList.shift();
 	}
-	
+
 	// TODO: Get the first word by default
-	// TODO: Advance the cursor after each letter
 	// TODO: Disable the submit button until all letters are entered
-	// TODO: Only allow letters (no numbers, symbols, emojis)
 	// TODO: Disable all rows except attemptCount
 	// TODO: Duplicate letters that don't belong, gray
 	//       CONTACT (correct word=CONTENT), second C should be gray
+	// 2022-06-15: Advance the cursor after each letter
+	// 2022-06-15: Only allow letters (no numbers, symbols, emojis)
 
 	$scope.checkWord = function() {
 
@@ -72,6 +72,37 @@
 		c.data.currentWord.attempts[c.data.attemptCount++] = attemptObj;
 	}
 
+	$scope.letterEntered = function(ev, current) {
+
+		var myLocStr = current.$$watchers[2].last;
+		var myPos = myLocStr.replace('letter_', '').split('_');
+		var myRow = parseInt(myPos[0], 10);
+		var myCol = parseInt(myPos[1], 10);
+		console.log('keyCode=' + ev.keyCode);
+
+		if (ev.keyCode >= 65 && ev.keyCode <= 90) {
+			// console.log('myCol=' + myCol + ' isLetter=' + c.data.currentWord.meta[myCol].isLetter);
+			// console.log('len=' + c.data.currentWord.text.length);
+			if (myCol+1 < c.data.currentWord.text.length) {
+				if (c.data.currentWord.meta[myCol+1].isLetter) {
+					myCol++;
+				} else {
+					myCol += 2;
+				}
+				// console.log('...myCol=' + myCol);
+				var nextFieldID = 'letter_' + myRow + '_' + myCol;
+				document.getElementById(nextFieldID).focus();
+			}
+		} else {
+			document.getElementById(myLocStr).value = "";
+		}
+		//console.log(ev);
+	}
+	
+	$scope.paste = function() {
+		console.log('eat paste');
+	}
+
 };]]></client_script>
         <controller_as>c</controller_as>
         <css/>
@@ -106,7 +137,7 @@
         <sys_created_on>2022-03-13 21:42:23</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f5f65e982fd60110bf05f21df699b6aa</sys_id>
-        <sys_mod_count>80</sys_mod_count>
+        <sys_mod_count>111</sys_mod_count>
         <sys_name>swordle</sys_name>
         <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
         <sys_policy/>
@@ -114,7 +145,7 @@
         <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
         <sys_update_name>sp_widget_f5f65e982fd60110bf05f21df699b6aa</sys_update_name>
         <sys_updated_by>chuck.tomasi</sys_updated_by>
-        <sys_updated_on>2022-04-21 02:02:41</sys_updated_on>
+        <sys_updated_on>2022-06-16 01:51:43</sys_updated_on>
         <template><![CDATA[<div>
   <!-- your widget template -->
   <!-- <pre>{{c.data.wordList | json }}</pre> -->
@@ -128,6 +159,9 @@
         <input type="text"
                id="{{'letter_' + $parent.$parent.$index + '_' + $index}}"
                size="1"
+               ng-keyup="letterEntered($event, this)"
+               ng-paste="paste()"
+               ng-pattern="/^[a-zA-Z]$/"
                maxlength="1"
                value="{{att.letter[$index]}}"
                style="background-color:{{att.color[$index]}}; color:black">
