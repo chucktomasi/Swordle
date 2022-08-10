@@ -44,6 +44,7 @@ Util.prototype = {
 			for (var mg = 0; mg < maxGuesses; mg++) {
 				obj.attempts[mg] = {
 					"guessedWord" : "",
+					"disabled" : true,
 					"color" : [],
 					"letter" : []
 				};
@@ -66,7 +67,7 @@ Util.prototype = {
         <sys_created_on>2022-04-21 00:49:10</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>cc0eaaa01b43c1502e4d4156bc4bcbf0</sys_id>
-        <sys_mod_count>2</sys_mod_count>
+        <sys_mod_count>3</sys_mod_count>
         <sys_name>Util</sys_name>
         <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
         <sys_policy>read</sys_policy>
@@ -74,6 +75,6 @@ Util.prototype = {
         <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
         <sys_update_name>sys_script_include_cc0eaaa01b43c1502e4d4156bc4bcbf0</sys_update_name>
         <sys_updated_by>chuck.tomasi</sys_updated_by>
-        <sys_updated_on>2022-04-21 01:16:10</sys_updated_on>
+        <sys_updated_on>2022-08-09 23:14:34</sys_updated_on>
     </sys_script_include>
 </record_update>

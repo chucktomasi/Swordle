@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
     <sp_widget action="INSERT_OR_UPDATE">
         <category>custom</category>
-        <client_script><![CDATA[api.controller=function($scope) {
+        <client_script><![CDATA[api.controller=function($scope, spUtil) {
 	/* widget controller */
 	var c = this;
+	c.data.disableSubmit = true;
 
 	$scope.getNextWord = function() {
 		// console.log('click');
 		c.data.currentWord = c.data.wordList.shift();
+		c.data.currentWord.attempts[0].disabled = false;
+		c.data.attemptCount = 0;
 	}
 
 	// TODO: Get the first word by default
+	// TODO: Set initial focus at the first row, first letter
 	// TODO: Disable the submit button until all letters are entered
 	// TODO: Disable all rows except attemptCount
 	// TODO: Duplicate letters that don't belong, gray
@@ -67,36 +71,64 @@
 		// Populate c.data.currentWord.attempt[i]
 
 		attemptObj.guessedWord = guessedWord;
+		attemptObj.disabled = true;
 		attemptObj.color = color;
 		attemptObj.letter = letterList;
 		c.data.currentWord.attempts[c.data.attemptCount++] = attemptObj;
+		c.data.currentWord.attempts[c.data.attemptCount].disabled = false;
 	}
 
 	$scope.letterEntered = function(ev, current) {
-
-		var myLocStr = current.$$watchers[2].last;
+		
+		var myLocStr = current.$$watchers[current.$$watchersCount - 1].last;
 		var myPos = myLocStr.replace('letter_', '').split('_');
 		var myRow = parseInt(myPos[0], 10);
 		var myCol = parseInt(myPos[1], 10);
 		console.log('keyCode=' + ev.keyCode);
+		
+		if (ev.keyCode == 16) {
+			spUtil.addTrivialMessage("Don't use the shift key");
+		}
 
 		if (ev.keyCode >= 65 && ev.keyCode <= 90) {
-			// console.log('myCol=' + myCol + ' isLetter=' + c.data.currentWord.meta[myCol].isLetter);
-			// console.log('len=' + c.data.currentWord.text.length);
+			var letter = ev.key.toUpperCase();
+			console.log('myLocStr=' + myLocStr);
+			document.getElementById(myLocStr).value = letter;
+			c.data.currentWord.attempts[c.data.attemptCount].letter[myCol] = letter;
+			console.log('myCol=' + myCol + ' isLetter=' + c.data.currentWord.meta[myCol].isLetter);
+			console.log('len=' + c.data.currentWord.text.length);
 			if (myCol+1 < c.data.currentWord.text.length) {
 				if (c.data.currentWord.meta[myCol+1].isLetter) {
 					myCol++;
 				} else {
 					myCol += 2;
 				}
-				// console.log('...myCol=' + myCol);
+				console.log('...myCol=' + myCol);
 				var nextFieldID = 'letter_' + myRow + '_' + myCol;
 				document.getElementById(nextFieldID).focus();
 			}
 		} else {
+			console.log('wrong!');
 			document.getElementById(myLocStr).value = "";
+			c.data.currentWord.attempts[c.data.attemptCount].letter[myCol] = "";
 		}
-		//console.log(ev);
+	}
+
+	function currentRowFilled() {
+		
+		var wordLen = c.data.currentWord.text.length;
+		var answer = false;
+		
+		for (var i = 0; i < wordLen; i++) {
+			var letter = c.data.currentWord.attempts[c.data.attemptCount].letter[i];
+			var isLetter = c.data.currentWord.meta[i].isLetter;
+			if (isLetter && letter == "") {
+				return false;
+			}
+		}
+		
+		return true;
+		
 	}
 	
 	$scope.paste = function() {
@@ -128,8 +160,9 @@
 	var wordList = new Util().getWordList(sessionID);
 
 	data.wordList = wordList;
-	data.currentWord = {};
+	data.currentWord = data.wordList.shift();
 	data.attemptCount = 0;
+	data.currentWord.attempts[0].disabled = false;
 })();]]></script>
         <servicenow>false</servicenow>
         <sys_class_name>sp_widget</sys_class_name>
@@ -137,7 +170,7 @@
         <sys_created_on>2022-03-13 21:42:23</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f5f65e982fd60110bf05f21df699b6aa</sys_id>
-        <sys_mod_count>111</sys_mod_count>
+        <sys_mod_count>159</sys_mod_count>
         <sys_name>swordle</sys_name>
         <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
         <sys_policy/>
@@ -145,7 +178,7 @@
         <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
         <sys_update_name>sp_widget_f5f65e982fd60110bf05f21df699b6aa</sys_update_name>
         <sys_updated_by>chuck.tomasi</sys_updated_by>
-        <sys_updated_on>2022-06-16 01:51:43</sys_updated_on>
+        <sys_updated_on>2022-08-09 23:36:41</sys_updated_on>
         <template><![CDATA[<div>
   <!-- your widget template -->
   <!-- <pre>{{c.data.wordList | json }}</pre> -->
@@ -162,6 +195,7 @@
                ng-keyup="letterEntered($event, this)"
                ng-paste="paste()"
                ng-pattern="/^[a-zA-Z]$/"
+               ng-disabled="att.disabled"
                maxlength="1"
                value="{{att.letter[$index]}}"
                style="background-color:{{att.color[$index]}}; color:black">
@@ -171,15 +205,19 @@
     </span>
   </div>
 
-  <div class="btn btn-info" ng-click="checkWord()">
+  <div class="btn btn-info"
+       ng-disabled="c.data.submitDisabled"
+       ng-click="checkWord()">
     ${Submit}
   </div>
 
-  <div class="btn btn-primary" ng-if="c.data.wordList.length > 0" ng-click="getNextWord()">
+  <div class="btn btn-primary"
+       ng-if="c.data.wordList.length > 0"
+       ng-click="getNextWord()">
     Next word!
   </div>
 
-  <pre>{{c.data.currentWord | json }}</pre>
+  <pre>currentWord={{c.data.currentWord | json }}</pre>
 
 </div>]]></template>
     </sp_widget>
