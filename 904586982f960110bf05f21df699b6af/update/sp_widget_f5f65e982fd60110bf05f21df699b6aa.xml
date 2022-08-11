@@ -5,18 +5,28 @@
 	/* widget controller */
 	var c = this;
 
+	$scope.myInit = function() {
+
+		document.getElementById('letter_0_0').focus();
+
+	}
+
 	$scope.getNextWord = function() {
 		// console.log('click');
 		c.data.currentWord = c.data.wordList.shift();
 	}
 
-	// TODO: Get the first word by default
-	// TODO: Disable the submit button until all letters are entered
-	// TODO: Disable all rows except attemptCount
 	// TODO: Duplicate letters that don't belong, gray
 	//       CONTACT (correct word=CONTENT), second C should be gray
+	// TODO: Don't allow invalid (gray) letters in rows 1 and beyond
+	// TODO: Auto place focus on element 0 on new rows
 	// 2022-06-15: Advance the cursor after each letter
 	// 2022-06-15: Only allow letters (no numbers, symbols, emojis)
+	// 2022-08-10: Get the first word by default
+	// 2022-08-10: Disable the submit button until all letters are entered
+	// 2022-08-10: Disable all rows except attemptCount
+	// 2022-08-10: Learn when to finish (all letters are green)
+	// 2022-08-10: Display the hint at the top of the screen
 
 	$scope.checkWord = function() {
 
@@ -56,7 +66,7 @@
 				letterList[i] = letterN;
 				color.push(myColor);
 				// document.getElementById(index).style.foo = 'green';
-				console.log('>>>DEBUG: index=' + index + ' myColor=' + myColor + ' letterN=' + letterN)
+				// console.log('>>>DEBUG: index=' + index + ' myColor=' + myColor + ' letterN=' + letterN)
 			} else {
 				guessedWord += c.data.currentWord.text[i];
 				color.push('green'); // Dharmit said so
@@ -68,19 +78,40 @@
 
 		attemptObj.guessedWord = guessedWord;
 		attemptObj.color = color;
+		attemptObj.disabled = true;
 		attemptObj.letter = letterList;
-		c.data.currentWord.attempts[c.data.attemptCount++] = attemptObj;
+		c.data.submitDisabled = true;
+		c.data.currentWord.attempts[c.data.attemptCount] = attemptObj;
+		// console.table(c.data.currentWord.attempts[c.data.attemptCount], ["guessedWord", "disabled"]);
+		// Check if the game over
+		c.data.gameOver = gameOver();
+		c.data.attemptCount++;
+		if (c.data.gameOver) {
+			console.log("Good job!");
+		} else {
+			// Enable the current row
+			c.data.currentWord.attempts[c.data.attemptCount].disabled = false;		
+
+			// Set focus to first cell in the new row
+			var focusID = 'letter_' + c.data.attemptCount + '_0';
+			console.log(focusID);
+			document.getElementById(focusID).focus();
+		}
 	}
 
 	$scope.letterEntered = function(ev, current) {
 
-		var myLocStr = current.$$watchers[2].last;
+		var myLocStr = current.$$watchers[current.$$watchersCount - 1].last;
 		var myPos = myLocStr.replace('letter_', '').split('_');
 		var myRow = parseInt(myPos[0], 10);
 		var myCol = parseInt(myPos[1], 10);
-		console.log('keyCode=' + ev.keyCode);
+		// console.log('keyCode=' + ev.keyCode);
+		// console.log('current=' , current);
 
 		if (ev.keyCode >= 65 && ev.keyCode <= 90) {
+			var letter = ev.key.toUpperCase();
+			document.getElementById(myLocStr).value = letter;
+			c.data.currentWord.attempts[c.data.attemptCount].letter[myCol] = letter;
 			// console.log('myCol=' + myCol + ' isLetter=' + c.data.currentWord.meta[myCol].isLetter);
 			// console.log('len=' + c.data.currentWord.text.length);
 			if (myCol+1 < c.data.currentWord.text.length) {
@@ -95,10 +126,40 @@
 			}
 		} else {
 			document.getElementById(myLocStr).value = "";
+			c.data.currentWord.attempts[c.data.attemptCount].letter[myCol] = "";
 		}
+
+		c.data.submitDisabled = !currentRowFilled();
 		//console.log(ev);
 	}
-	
+
+	function gameOver() {
+
+		var currentWordText = c.data.currentWord.text;
+		var attemptCount = c.data.attemptCount;
+		var guessedWord = c.data.currentWord.attempts[attemptCount].guessedWord;
+
+		return currentWordText === guessedWord;
+	}
+
+	function currentRowFilled() {
+
+		var wordLen = c.data.currentWord.text.length;
+
+		for (var i = 0; i < wordLen; i++) {
+			var letter = c.data.currentWord.attempts[c.data.attemptCount].letter[i];
+			var isLetter = c.data.currentWord.meta[i].isLetter;
+
+			// console.log('letter=' + letter + ' isLetter=' + isLetter);
+			if (isLetter && letter == "") {
+				return false;
+			}
+		}
+
+		return true;
+
+	}
+
 	$scope.paste = function() {
 		console.log('eat paste');
 	}
@@ -128,8 +189,11 @@
 	var wordList = new Util().getWordList(sessionID);
 
 	data.wordList = wordList;
-	data.currentWord = {};
+	data.currentWord = data.wordList.shift();
 	data.attemptCount = 0;
+	data.currentWord.attempts[0].disabled = false;
+	data.submitDisabled = true;
+	data.gameOver = false;
 })();]]></script>
         <servicenow>false</servicenow>
         <sys_class_name>sp_widget</sys_class_name>
@@ -137,7 +201,7 @@
         <sys_created_on>2022-03-13 21:42:23</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f5f65e982fd60110bf05f21df699b6aa</sys_id>
-        <sys_mod_count>111</sys_mod_count>
+        <sys_mod_count>161</sys_mod_count>
         <sys_name>swordle</sys_name>
         <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
         <sys_policy/>
@@ -145,12 +209,10 @@
         <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
         <sys_update_name>sp_widget_f5f65e982fd60110bf05f21df699b6aa</sys_update_name>
         <sys_updated_by>chuck.tomasi</sys_updated_by>
-        <sys_updated_on>2022-06-16 01:51:43</sys_updated_on>
+        <sys_updated_on>2022-08-11 01:46:43</sys_updated_on>
         <template><![CDATA[<div>
-  <!-- your widget template -->
-  <!-- <pre>{{c.data.wordList | json }}</pre> -->
   <div>
-    {{c.data.currentWord.text}}
+    {{c.data.currentWord.hint}}
   </div>
 
   <div ng-repeat="att in c.data.currentWord.attempts">
@@ -163,6 +225,7 @@
                ng-paste="paste()"
                ng-pattern="/^[a-zA-Z]$/"
                maxlength="1"
+               ng-disabled="att.disabled"
                value="{{att.letter[$index]}}"
                style="background-color:{{att.color[$index]}}; color:black">
       </span>
@@ -170,8 +233,10 @@
       &nbsp;
     </span>
   </div>
-
-  <div class="btn btn-info" ng-click="checkWord()">
+    
+  <div class="btn btn-info"
+       ng-disabled="c.data.submitDisabled"
+       ng-click="checkWord()">
     ${Submit}
   </div>
 
