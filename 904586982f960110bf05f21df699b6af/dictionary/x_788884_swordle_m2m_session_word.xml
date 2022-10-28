@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
-    <element label="Session word" max_length="40" name="x_788884_swordle_m2m_session_word" sizeclass="13" type="collection">
+    <element db_object_id="4a3be8881b7685102e4d4156bc4bcb35" label="Session word" max_length="40" name="x_788884_swordle_m2m_session_word" type="collection">
         <element attributes="encode_utf8=false" label="Session" max_length="32" name="session" reference="x_788884_swordle_session" type="reference"/>
         <element attributes="encode_utf8=false" label="Word" max_length="32" name="word" reference="x_788884_swordle_word" type="reference"/>
         <index name="index">

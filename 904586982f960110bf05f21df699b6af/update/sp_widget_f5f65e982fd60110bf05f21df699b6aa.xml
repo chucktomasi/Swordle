@@ -4,21 +4,27 @@
         <client_script><![CDATA[api.controller=function($scope) {
 	/* widget controller */
 	var c = this;
+	$scope.grayList = [];
+	$scope.showHint = false;
 
-	$scope.myInit = function() {
+	// document.getElementById('letter_0_0').focus();
 
-		document.getElementById('letter_0_0').focus();
-
+	$scope.reverseHint = function() {
+		$scope.showHint = !$scope.showHint;
 	}
-
+	
 	$scope.getNextWord = function() {
 		// console.log('click');
 		c.data.currentWord = c.data.wordList.shift();
+		$scope.grayList = [];
+		// Enable the first row for the new word
+		c.data.currentWord.attempts[0].disabled = false;
+		// Reset the row counter back to the top
+		c.data.attemptCount = 0;
+		$scope.showHint = false;
 	}
 
-	// TODO: Duplicate letters that don't belong, gray
-	//       CONTACT (correct word=CONTENT), second C should be gray
-	// TODO: Don't allow invalid (gray) letters in rows 1 and beyond
+	// TODO: Add a (docs) URL to the word record and display the link when game over
 	// TODO: Auto place focus on element 0 on new rows
 	// 2022-06-15: Advance the cursor after each letter
 	// 2022-06-15: Only allow letters (no numbers, symbols, emojis)
@@ -27,6 +33,7 @@
 	// 2022-08-10: Disable all rows except attemptCount
 	// 2022-08-10: Learn when to finish (all letters are green)
 	// 2022-08-10: Display the hint at the top of the screen
+	// 2022-10-27: Added list of invalid letters
 
 	$scope.checkWord = function() {
 
@@ -60,8 +67,12 @@
 					// console.log('>>>DEBUG: Right letter, wrong position ' + letterN);
 					myColor = 'yellow';
 				} else {
-					// WTF
-					// console.log('>>>DEBUG: WTF');
+					// Check if the letter is already in the list
+					var list = $scope.grayList;
+					if (list.indexOf(letterN) == -1) {
+						list.push(letterN);
+						$scope.grayList = list.sort();
+					}
 				}
 				letterList[i] = letterN;
 				color.push(myColor);
@@ -110,21 +121,34 @@
 
 		if (ev.keyCode >= 65 && ev.keyCode <= 90) {
 			var letter = ev.key.toUpperCase();
-			document.getElementById(myLocStr).value = letter;
-			c.data.currentWord.attempts[c.data.attemptCount].letter[myCol] = letter;
-			// console.log('myCol=' + myCol + ' isLetter=' + c.data.currentWord.meta[myCol].isLetter);
-			// console.log('len=' + c.data.currentWord.text.length);
-			if (myCol+1 < c.data.currentWord.text.length) {
-				if (c.data.currentWord.meta[myCol+1].isLetter) {
-					myCol++;
-				} else {
-					myCol += 2;
+			// Is the letter NOT in the list of bad letters?
+			if ($scope.grayList.indexOf(letter) == -1) {
+				console.log('good letter: ' + letter);
+				document.getElementById(myLocStr).value = letter;
+				c.data.currentWord.attempts[c.data.attemptCount].letter[myCol] = letter;
+				// console.log('myCol=' + myCol + ' isLetter=' + c.data.currentWord.meta[myCol].isLetter);
+				// console.log('len=' + c.data.currentWord.text.length);
+				if (myCol+1 < c.data.currentWord.text.length) {
+					if (c.data.currentWord.meta[myCol+1].isLetter) {
+						myCol++;
+					} else {
+						myCol += 2;
+					}
+					// console.log('...myCol=' + myCol);
+					var nextFieldID = 'letter_' + myRow + '_' + myCol;
+					document.getElementById(nextFieldID).focus();
 				}
-				// console.log('...myCol=' + myCol);
-				var nextFieldID = 'letter_' + myRow + '_' + myCol;
-				document.getElementById(nextFieldID).focus();
+			}  else {
+				console.log('bad letter: ' + letter);
+
+				// Erase the bad letter and let them try again
+				document.getElementById(myLocStr).value = "";
+				c.data.currentWord.attempts[c.data.attemptCount].letter[myCol] = "";
+
 			}
 		} else {
+			console.log('invalid keyCode: ' + ev.keyCode);
+
 			document.getElementById(myLocStr).value = "";
 			c.data.currentWord.attempts[c.data.attemptCount].letter[myCol] = "";
 		}
@@ -201,7 +225,7 @@
         <sys_created_on>2022-03-13 21:42:23</sys_created_on>
         <sys_customer_update>false</sys_customer_update>
         <sys_id>f5f65e982fd60110bf05f21df699b6aa</sys_id>
-        <sys_mod_count>161</sys_mod_count>
+        <sys_mod_count>184</sys_mod_count>
         <sys_name>swordle</sys_name>
         <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
         <sys_policy/>
@@ -209,10 +233,15 @@
         <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
         <sys_update_name>sp_widget_f5f65e982fd60110bf05f21df699b6aa</sys_update_name>
         <sys_updated_by>chuck.tomasi</sys_updated_by>
-        <sys_updated_on>2022-08-11 01:46:43</sys_updated_on>
+        <sys_updated_on>2022-10-28 01:33:25</sys_updated_on>
         <template><![CDATA[<div>
-  <div>
+  <div ng-if="showHint">
     {{c.data.currentWord.hint}}
+  </div>
+  <div ng-if="!showHint" ng-click="reverseHint()">
+    <button class="btn btn-danger">
+      Show Hint
+    </button>
   </div>
 
   <div ng-repeat="att in c.data.currentWord.attempts">
@@ -243,8 +272,10 @@
   <div class="btn btn-primary" ng-if="c.data.wordList.length > 0" ng-click="getNextWord()">
     Next word!
   </div>
-
+  
+  <pre>{{grayList}}</pre>
   <pre>{{c.data.currentWord | json }}</pre>
+ 
 
 </div>]]></template>
     </sp_widget>

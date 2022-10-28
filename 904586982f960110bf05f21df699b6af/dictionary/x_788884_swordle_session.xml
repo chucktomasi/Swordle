@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
-    <element label="Session" max_length="40" name="x_788884_swordle_session" sizeclass="2" type="collection">
+    <element db_object_id="963be8881b7685102e4d4156bc4bcb69" label="Session" max_length="40" name="x_788884_swordle_session" type="collection">
         <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
         <element label="Owner" max_length="32" name="owner" reference="sys_user" type="reference"/>
         <element display="true" label="Title" max_length="40" name="title" type="string"/>

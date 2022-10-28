@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?><database>
-    <element label="Word" max_length="40" name="x_788884_swordle_word" sizeclass="35" type="collection">
+    <element db_object_id="f93ba8881b7685102e4d4156bc4bcb86" label="Word" max_length="40" name="x_788884_swordle_word" type="collection">
         <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
-        <element label="Hint" max_length="255" name="hint" type="string"/>
-        <element display="true" label="Text" max_length="40" name="text" type="string"/>
+        <element label="Hint" mandatory="true" max_length="255" name="hint" type="string"/>
+        <element display="true" label="Text" mandatory="true" max_length="40" name="text" type="string"/>
     </element>
 </database>
