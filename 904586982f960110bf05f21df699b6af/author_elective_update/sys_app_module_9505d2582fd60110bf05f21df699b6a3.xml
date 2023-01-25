@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_app_module">
+    <sys_app_module action="DELETE">
+        <active>true</active>
+        <application display_value="Swordle">1b2e4e902fd60110bf05f21df699b64a</application>
+        <assessment/>
+        <device_type/>
+        <filter/>
+        <hint/>
+        <homepage/>
+        <image/>
+        <link_type>LIST</link_type>
+        <map_page/>
+        <mobile_title>Attempts</mobile_title>
+        <mobile_view_name>Mobile</mobile_view_name>
+        <name>x_788884_swordle_attempt</name>
+        <order>300</order>
+        <override_menu_roles>false</override_menu_roles>
+        <query/>
+        <report/>
+        <roles>x_788884_swordle.attempt_user</roles>
+        <sys_class_name>sys_app_module</sys_class_name>
+        <sys_created_by>admin</sys_created_by>
+        <sys_created_on>2022-03-13 21:33:53</sys_created_on>
+        <sys_domain>global</sys_domain>
+        <sys_domain_path>/</sys_domain_path>
+        <sys_id>9505d2582fd60110bf05f21df699b6a3</sys_id>
+        <sys_mod_count>1</sys_mod_count>
+        <sys_name>Attempts</sys_name>
+        <sys_overrides/>
+        <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
+        <sys_update_name>sys_app_module_9505d2582fd60110bf05f21df699b6a3</sys_update_name>
+        <sys_updated_by>chuck.tomasi</sys_updated_by>
+        <sys_updated_on>2022-10-31 16:30:45</sys_updated_on>
+        <timeline_page/>
+        <title>Attempts</title>
+        <uncancelable>false</uncancelable>
+        <view_name/>
+        <window_name/>
+    </sys_app_module>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="SWordle">904586982f960110bf05f21df699b6af</application>
+        <file_path/>
+        <instance_id>ec8f449cdb87591052dd2f17d49619af</instance_id>
+        <instance_name>gameshowdev</instance_name>
+        <name>sys_app_module_9505d2582fd60110bf05f21df699b6a3</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update sys_domain="global" table="sys_app_module"><sys_app_module action="INSERT_OR_UPDATE"><active>true</active><application display_value="Swordle">1b2e4e902fd60110bf05f21df699b64a</application><assessment/><device_type/><filter/><hint/><homepage/><image/><link_type>LIST</link_type><map_page/><mobile_title>Attempts</mobile_title><mobile_view_name>Mobile</mobile_view_name><name>x_788884_swordle_attempt</name><order>300</order><override_menu_roles>false</override_menu_roles><query/><report/><roles>x_788884_swordle.attempt_user</roles><sys_class_name>sys_app_module</sys_class_name><sys_created_by>admin</sys_created_by><sys_created_on>2022-03-13 21:33:53</sys_created_on><sys_domain>global</sys_domain><sys_domain_path>/</sys_domain_path><sys_id>9505d2582fd60110bf05f21df699b6a3</sys_id><sys_mod_count>1</sys_mod_count><sys_name>Attempts</sys_name><sys_overrides/><sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package><sys_policy/><sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope><sys_update_name>sys_app_module_9505d2582fd60110bf05f21df699b6a3</sys_update_name><sys_updated_by>chuck.tomasi</sys_updated_by><sys_updated_on>2022-10-31 16:30:45</sys_updated_on><timeline_page/><title>Attempts</title><uncancelable>false</uncancelable><view_name/><window_name/></sys_app_module></record_update>]]></payload>
+        <payload_hash>513673970</payload_hash>
+        <record_name>Attempts</record_name>
+        <reverted_from/>
+        <source>eb6cb12087431110d978a7d73cbb3576</source>
+        <source_table>sys_update_set</source_table>
+        <state>previous</state>
+        <sys_created_by>chuck.tomasi</sys_created_by>
+        <sys_created_on>2022-11-05 17:23:12</sys_created_on>
+        <sys_id>2b6cb12087431110d978a7d73cbb35c9</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_recorded_at>18448d161fd0000001</sys_recorded_at>
+        <sys_updated_by>chuck.tomasi</sys_updated_by>
+        <sys_updated_on>2022-11-05 17:23:12</sys_updated_on>
+        <type>Module</type>
+        <update_guid>2e7044432c7e5d10634e3b18e5be1121</update_guid>
+        <update_guid_history>2e7044432c7e5d10634e3b18e5be1121:513673970,3b4c312086431110cba5a5aaeb05e308:0,2e7044432c7e5d10634e3b18e5be1121:513673970,7469b7fafc3e5d1004cc426556652d53:-255832312</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete display_value="Attempts">eed2bf9e87282110d978a7d73cbb35db</sys_audit_delete>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>chuck.tomasi</sys_created_by>
+        <sys_created_on>2023-01-25 02:04:08</sys_created_on>
+        <sys_db_object display_value="" name="sys_app_module">sys_app_module</sys_db_object>
+        <sys_id>03f9f0c962404bfd925b5b961dd0f6a1</sys_id>
+        <sys_metadata>9505d2582fd60110bf05f21df699b6a3</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>Attempts</sys_name>
+        <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
+        <sys_scope_delete display_value="">03e65b7de31a4d4e8302edaf098b0c81</sys_scope_delete>
+        <sys_update_name>sys_app_module_9505d2582fd60110bf05f21df699b6a3</sys_update_name>
+        <sys_update_version display_value="sys_app_module_9505d2582fd60110bf05f21df699b6a3">2b6cb12087431110d978a7d73cbb35c9</sys_update_version>
+        <sys_updated_by>chuck.tomasi</sys_updated_by>
+        <sys_updated_on>2023-01-25 02:04:08</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

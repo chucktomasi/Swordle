@@ -1,19 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update table="sp_widget">
     <sp_widget action="INSERT_OR_UPDATE">
         <category>custom</category>
-        <client_script><![CDATA[api.controller=function($scope) {
+        <client_script><![CDATA[api.controller=function($scope, spUtil, $timeout) {
 	/* widget controller */
 	var c = this;
 	$scope.grayList = [];
 	$scope.showHint = false;
 
-	// document.getElementById('letter_0_0').focus();
-	$('.letter_0_0').focus();
+	// Position cursor at 0,0 on startup
+	// Close the console window or you'll start drinking earlier
+	$scope.init = function() {
+		$timeout(function () {
+			console.log('waiting...');
+			var cellID = 'letter_0_0';
+			console.log('cellID=' + cellID);
+			document.getElementById(cellID).focus();
+		}, 100);
+	}
 
 	$scope.reverseHint = function() {
 		$scope.showHint = !$scope.showHint;
 	}
-	
+
 	$scope.getNextWord = function() {
 		// console.log('click');
 		c.data.currentWord = c.data.wordList.shift();
@@ -23,10 +31,10 @@
 		// Reset the row counter back to the top
 		c.data.attemptCount = 0;
 		$scope.showHint = false;
+		c.data.showURL = false;
 	}
 
-	// TODO: Add a (docs) URL to the word record and display the link when game over
-	// TODO: Auto place focus on element 0 on new rows
+	// TODO: BUG - Each successive word gets 1 fewer attempts than previous word
 	// 2022-06-15: Advance the cursor after each letter
 	// 2022-06-15: Only allow letters (no numbers, symbols, emojis)
 	// 2022-08-10: Get the first word by default
@@ -35,6 +43,10 @@
 	// 2022-08-10: Learn when to finish (all letters are green)
 	// 2022-08-10: Display the hint at the top of the screen
 	// 2022-10-27: Added list of invalid letters
+	// 2023-01-24: Add a (docs) URL to the word record and display the link when game over
+	// 2023-01-24: Auto place focus on element 0 on new rows
+	// 2023-01-24: What are we doing with the Attempts table? (we nuked it)
+	// 2023-01-24: When you get to the end, if not successful, show answer
 
 	$scope.checkWord = function() {
 
@@ -98,16 +110,29 @@
 		// Check if the game over
 		c.data.gameOver = gameOver();
 		c.data.attemptCount++;
-		if (c.data.gameOver) {
-			console.log("Good job!");
+		// console.log('wordList.length=' + c.data.wordList.length);
+		if (c.data.attemptCount >= c.data.wordList.length) {
+			c.data.gameOver = true;
+			spUtil.addErrorMessage('LOSER!');
 		} else {
-			// Enable the current row
-			c.data.currentWord.attempts[c.data.attemptCount].disabled = false;		
+			if (c.data.gameOver) {
+				spUtil.addTrivialMessage('Good job!')
+				// console.log("Good job!");
+			} else {
+				// Enable the current row
+				c.data.currentWord.attempts[c.data.attemptCount].disabled = false;		
+				$timeout(function () {
+					// Set focus to first cell in the new row
+					var focusID = 'letter_' + c.data.attemptCount + '_0';
+					//console.log(focusID);
+					document.getElementById(focusID).focus();
+				}, 100);
 
-			// Set focus to first cell in the new row
-			var focusID = 'letter_' + c.data.attemptCount + '_0';
-			console.log(focusID);
-			document.getElementById(focusID).focus();
+			}
+		}
+
+		if (c.data.gameOver) {
+			c.data.showURL = true;
 		}
 	}
 
@@ -124,7 +149,7 @@
 			var letter = ev.key.toUpperCase();
 			// Is the letter NOT in the list of bad letters?
 			if ($scope.grayList.indexOf(letter) == -1) {
-				console.log('good letter: ' + letter);
+				// console.log('good letter: ' + letter);
 				document.getElementById(myLocStr).value = letter;
 				c.data.currentWord.attempts[c.data.attemptCount].letter[myCol] = letter;
 				// console.log('myCol=' + myCol + ' isLetter=' + c.data.currentWord.meta[myCol].isLetter);
@@ -140,7 +165,7 @@
 					document.getElementById(nextFieldID).focus();
 				}
 			}  else {
-				console.log('bad letter: ' + letter);
+				// console.log('bad letter: ' + letter);
 
 				// Erase the bad letter and let them try again
 				document.getElementById(myLocStr).value = "";
@@ -219,20 +244,21 @@
 	data.currentWord.attempts[0].disabled = false;
 	data.submitDisabled = true;
 	data.gameOver = false;
+	data.showURL = false;
 })();]]></script>
         <servicenow>false</servicenow>
         <sys_class_name>sp_widget</sys_class_name>
         <sys_created_by>admin</sys_created_by>
         <sys_created_on>2022-03-13 21:42:23</sys_created_on>
         <sys_id>f5f65e982fd60110bf05f21df699b6aa</sys_id>
-        <sys_mod_count>185</sys_mod_count>
+        <sys_mod_count>223</sys_mod_count>
         <sys_name>swordle</sys_name>
         <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
         <sys_policy/>
         <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
         <sys_update_name>sp_widget_f5f65e982fd60110bf05f21df699b6aa</sys_update_name>
         <sys_updated_by>chuck.tomasi</sys_updated_by>
-        <sys_updated_on>2022-10-31 14:54:20</sys_updated_on>
+        <sys_updated_on>2023-01-25 02:06:15</sys_updated_on>
         <template><![CDATA[<div>
   <div ng-if="showHint">
     {{c.data.currentWord.hint}}
@@ -261,20 +287,25 @@
       &nbsp;
     </span>
   </div>
-    
+  <div ng-if="c.data.showURL">
+    <a href="{{c.data.currentWord.url}}" target="_blank">{{c.data.currentWord.text}}</a>
+  </div>
+
   <div class="btn btn-info"
        ng-disabled="c.data.submitDisabled"
-       ng-click="checkWord()">
+       ng-click="checkWord()"
+       >
     ${Submit}
   </div>
 
-  <div class="btn btn-primary" ng-if="c.data.wordList.length > 0" ng-click="getNextWord()">
+  <div class="btn btn-primary"
+       ng-if="c.data.wordList.length > 0"
+       ng-click="getNextWord()">
     Next word!
   </div>
-  
-  <pre>{{grayList}}</pre>
+  <div ng-init="init()"></div>
+
   <pre>{{c.data.currentWord | json }}</pre>
- 
 
 </div>]]></template>
     </sp_widget>

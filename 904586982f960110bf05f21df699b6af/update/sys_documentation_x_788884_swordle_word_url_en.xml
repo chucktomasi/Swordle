@@ -1,24 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?><record_update>
-    <sys_documentation element="" label="Attempt" language="en" table="x_788884_swordle_attempt">
+    <sys_documentation element="url" label="URL" language="en" table="x_788884_swordle_word">
         <sys_documentation action="INSERT_OR_UPDATE">
-            <element/>
+            <element>url</element>
             <help/>
             <hint/>
-            <label>Attempt</label>
+            <label>URL</label>
             <language>en</language>
-            <name>x_788884_swordle_attempt</name>
-            <plural>Attempts</plural>
+            <name>x_788884_swordle_word</name>
+            <plural>URLs</plural>
             <sys_class_name>sys_documentation</sys_class_name>
-            <sys_created_by>admin</sys_created_by>
-            <sys_created_on>2022-03-13 21:33:55</sys_created_on>
+            <sys_created_by>chuck.tomasi</sys_created_by>
+            <sys_created_on>2023-01-25 00:44:36</sys_created_on>
             <sys_mod_count>0</sys_mod_count>
-            <sys_name>Attempt</sys_name>
+            <sys_name>URL</sys_name>
             <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
             <sys_policy/>
             <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
-            <sys_update_name>sys_documentation_x_788884_swordle_attempt__en</sys_update_name>
-            <sys_updated_by>admin</sys_updated_by>
-            <sys_updated_on>2022-03-13 21:33:55</sys_updated_on>
+            <sys_update_name>sys_documentation_x_788884_swordle_word_url_en</sys_update_name>
+            <sys_updated_by>chuck.tomasi</sys_updated_by>
+            <sys_updated_on>2023-01-25 00:44:36</sys_updated_on>
             <url/>
             <url_target/>
         </sys_documentation>

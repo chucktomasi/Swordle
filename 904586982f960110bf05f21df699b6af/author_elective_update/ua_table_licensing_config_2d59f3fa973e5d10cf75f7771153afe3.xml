@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?><record_update table="ua_table_licensing_config">
+    <ua_table_licensing_config action="DELETE">
+        <is_fulfillment>false</is_fulfillment>
+        <license_condition/>
+        <license_model>none</license_model>
+        <license_roles/>
+        <name>x_788884_swordle_attempt</name>
+        <op_delete>true</op_delete>
+        <op_insert>true</op_insert>
+        <op_update>true</op_update>
+        <owner_condition/>
+        <sys_class_name>ua_table_licensing_config</sys_class_name>
+        <sys_created_by>chuck.tomasi</sys_created_by>
+        <sys_created_on>2022-10-31 15:59:34</sys_created_on>
+        <sys_id>2d59f3fa973e5d10cf75f7771153afe3</sys_id>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_788884_swordle_attempt</sys_name>
+        <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
+        <sys_policy/>
+        <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
+        <sys_update_name>ua_table_licensing_config_2d59f3fa973e5d10cf75f7771153afe3</sys_update_name>
+        <sys_updated_by>chuck.tomasi</sys_updated_by>
+        <sys_updated_on>2022-10-31 15:59:34</sys_updated_on>
+    </ua_table_licensing_config>
+    <sys_update_version action="INSERT_OR_UPDATE">
+        <action>DELETE</action>
+        <application display_value="SWordle">904586982f960110bf05f21df699b6af</application>
+        <file_path/>
+        <instance_id>ae653121dbaeddd042b321c4059619e1</instance_id>
+        <instance_name>gameshow</instance_name>
+        <name>ua_table_licensing_config_2d59f3fa973e5d10cf75f7771153afe3</name>
+        <payload><![CDATA[<?xml version="1.0" encoding="UTF-8"?><record_update table="ua_table_licensing_config"><ua_table_licensing_config action="INSERT_OR_UPDATE"><is_fulfillment>false</is_fulfillment><license_condition/><license_model>none</license_model><license_roles/><name>x_788884_swordle_attempt</name><op_delete>true</op_delete><op_insert>true</op_insert><op_update>true</op_update><owner_condition/><sys_class_name>ua_table_licensing_config</sys_class_name><sys_created_by>chuck.tomasi</sys_created_by><sys_created_on>2022-10-31 15:59:34</sys_created_on><sys_id>2d59f3fa973e5d10cf75f7771153afe3</sys_id><sys_mod_count>0</sys_mod_count><sys_name>x_788884_swordle_attempt</sys_name><sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package><sys_policy/><sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope><sys_update_name>ua_table_licensing_config_2d59f3fa973e5d10cf75f7771153afe3</sys_update_name><sys_updated_by>chuck.tomasi</sys_updated_by><sys_updated_on>2022-10-31 15:59:34</sys_updated_on></ua_table_licensing_config></record_update>]]></payload>
+        <payload_hash>-1140546419</payload_hash>
+        <record_name>x_788884_swordle_attempt</record_name>
+        <reverted_from/>
+        <source>09b9473297221110cf75f7771153af6e</source>
+        <source_table>sys_upgrade_history</source_table>
+        <state>previous</state>
+        <sys_created_by/>
+        <sys_created_on>2022-10-19 02:15:45</sys_created_on>
+        <sys_id>ed69f7fa973e5d10cf75f7771153af0c</sys_id>
+        <sys_mod_count/>
+        <sys_recorded_at>183ee0678680000000</sys_recorded_at>
+        <sys_updated_by/>
+        <sys_updated_on/>
+        <type>Table Subscription Configuration</type>
+        <update_guid>ad69f7fa2d3e5d10eca7be218d58360c</update_guid>
+        <update_guid_history>ad69f7fa2d3e5d10eca7be218d58360c:-1140546419</update_guid_history>
+    </sys_update_version>
+    <sys_metadata_delete action="INSERT_OR_UPDATE">
+        <sys_audit_delete/>
+        <sys_class_name>sys_metadata_delete</sys_class_name>
+        <sys_created_by>chuck.tomasi</sys_created_by>
+        <sys_created_on>2023-01-25 02:04:13</sys_created_on>
+        <sys_db_object display_value="" name="ua_table_licensing_config">ua_table_licensing_config</sys_db_object>
+        <sys_id>a87557bf67b3420d842ebb72cc7b25e9</sys_id>
+        <sys_metadata>2d59f3fa973e5d10cf75f7771153afe3</sys_metadata>
+        <sys_mod_count>0</sys_mod_count>
+        <sys_name>x_788884_swordle_attempt</sys_name>
+        <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
+        <sys_parent/>
+        <sys_policy/>
+        <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
+        <sys_scope_delete display_value="">03e65b7de31a4d4e8302edaf098b0c81</sys_scope_delete>
+        <sys_update_name>ua_table_licensing_config_2d59f3fa973e5d10cf75f7771153afe3</sys_update_name>
+        <sys_update_version display_value="ua_table_licensing_config_2d59f3fa973e5d10cf75f7771153afe3">ed69f7fa973e5d10cf75f7771153af0c</sys_update_version>
+        <sys_updated_by>chuck.tomasi</sys_updated_by>
+        <sys_updated_on>2023-01-25 02:04:13</sys_updated_on>
+    </sys_metadata_delete>
+</record_update>

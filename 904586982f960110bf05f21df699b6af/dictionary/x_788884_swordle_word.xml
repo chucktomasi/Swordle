@@ -3,5 +3,6 @@
         <element default="true" label="Active" max_length="40" name="active" type="boolean"/>
         <element label="Hint" mandatory="true" max_length="255" name="hint" type="string"/>
         <element display="true" label="Text" mandatory="true" max_length="40" name="text" type="string"/>
+        <element attributes="edge_encryption_enabled=true" label="URL" max_length="1024" name="url" type="url"/>
     </element>
 </database>

@@ -14,7 +14,7 @@ Util.prototype = {
 
 	getWordList : function(sessionID) {
 
-		var m2mGr = new GlideRecord('x_788884_swordle_m2m_session_word');
+		var m2mGr = new GlideRecord(Constants.SESSION_WORD_M2M);
 		var list = [];
 
 		m2mGr.addQuery('session', sessionID);
@@ -35,6 +35,7 @@ Util.prototype = {
 			}
 			var obj = {
 				'text' : text,
+				'url'  : m2mGr.word.url.toString(),
 				'hint' : m2mGr.word.hint.toString(),
 				'attempts' : [],
 				'meta' : meta
@@ -66,13 +67,13 @@ Util.prototype = {
         <sys_created_by>chuck.tomasi</sys_created_by>
         <sys_created_on>2022-04-21 00:49:10</sys_created_on>
         <sys_id>cc0eaaa01b43c1502e4d4156bc4bcbf0</sys_id>
-        <sys_mod_count>3</sys_mod_count>
+        <sys_mod_count>4</sys_mod_count>
         <sys_name>Util</sys_name>
         <sys_package display_value="SWordle" source="x_788884_swordle">904586982f960110bf05f21df699b6af</sys_package>
         <sys_policy>read</sys_policy>
         <sys_scope display_value="SWordle">904586982f960110bf05f21df699b6af</sys_scope>
         <sys_update_name>sys_script_include_cc0eaaa01b43c1502e4d4156bc4bcbf0</sys_update_name>
         <sys_updated_by>chuck.tomasi</sys_updated_by>
-        <sys_updated_on>2022-08-11 00:33:12</sys_updated_on>
+        <sys_updated_on>2023-01-25 01:05:47</sys_updated_on>
     </sys_script_include>
 </record_update>
